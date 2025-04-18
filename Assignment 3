@@ -1,0 +1,133 @@
+1. Square Root Calculation (Easy Level)
+Description:
+Write a Java program to calculate the square root of a number.
+
+Use try-catch to handle invalid inputs (negative numbers or non-numeric values).
+
+CODE: 
+import java.util.Scanner;
+
+public class SquareRootCalculator {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter a number: ");
+
+        try {
+            double num = Double.parseDouble(sc.nextLine());
+            if (num < 0) {
+                throw new IllegalArgumentException("Cannot calculate the square root of a negative number.");
+            }
+            System.out.println("Square Root: " + Math.sqrt(num));
+        } catch (NumberFormatException e) {
+            System.out.println("Error: Invalid input. Please enter a numeric value.");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+}
+
+2.  ATM Withdrawal System (Medium Level)
+Description:
+Simulate an ATM withdrawal system:
+
+Ask the user to enter PIN
+Allow withdrawal if the PIN is correct and balance is sufficient
+Throw exceptions for invalid PIN or insufficient balance
+Ensure the system always displays the remaining balance even after an exception.
+CODE:
+import java.util.Scanner;
+
+public class ATM {
+    private static final int CORRECT_PIN = 1234;
+    private static double balance = 3000;
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        try {
+            System.out.print("Enter PIN: ");
+            int pin = sc.nextInt();
+            if (pin != CORRECT_PIN) {
+                throw new SecurityException("Invalid PIN.");
+            }
+
+            System.out.print("Withdraw Amount: ");
+            double amount = sc.nextDouble();
+
+            if (amount > balance) {
+                throw new IllegalArgumentException("Insufficient balance.");
+            }
+
+            balance -= amount;
+            System.out.println("Withdrawal successful! Remaining Balance: " + balance);
+        } catch (SecurityException | IllegalArgumentException e) {
+            System.out.println("Error: " + e.getMessage());
+        } finally {
+            System.out.println("Current Balance: " + balance);
+        }
+    }
+}
+
+3. University Enrollment System (Hard Level)
+Description:
+Create a university enrollment system with exception handling:
+
+Allow students to enroll in courses.
+Throw CourseFullException if the course is full.
+Throw PrerequisiteNotMetException if prerequisites are not completed.
+
+CODE: 
+import java.util.*;
+
+class CourseFullException extends Exception {
+    public CourseFullException(String message) {
+        super(message);
+    }
+}
+
+class PrerequisiteNotMetException extends Exception {
+    public PrerequisiteNotMetException(String message) {
+        super(message);
+    }
+}
+
+class Course {
+    String name;
+    String prerequisite;
+    int capacity;
+    int enrolled;
+
+    public Course(String name, String prerequisite, int capacity) {
+        this.name = name;
+        this.prerequisite = prerequisite;
+        this.capacity = capacity;
+        this.enrolled = 0;
+    }
+
+    public void enroll(boolean prereqCompleted) throws CourseFullException, PrerequisiteNotMetException {
+        if (!prereqCompleted) {
+            throw new PrerequisiteNotMetException("Complete " + prerequisite + " before enrolling in " + name + ".");
+        }
+        if (enrolled >= capacity) {
+            throw new CourseFullException("Course " + name + " is full.");
+        }
+        enrolled++;
+        System.out.println("Enrollment successful in " + name + "!");
+    }
+}
+
+public class UniversityEnrollmentSystem {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        Course advancedJava = new Course("Advanced Java", "Core Java", 2);
+
+        System.out.print("Enroll in Course: " + advancedJava.name + "\nHas completed " + advancedJava.prerequisite + "? (yes/no): ");
+        String status = sc.nextLine().trim().toLowerCase();
+        boolean prereqCompleted = status.equals("yes");
+
+        try {
+            advancedJava.enroll(prereqCompleted);
+        } catch (CourseFullException | PrerequisiteNotMetException e) {
+            System.out.println("Error: " + e.getClass().getSimpleName() + " - " + e.getMessage());
+        }
+    }
+}
